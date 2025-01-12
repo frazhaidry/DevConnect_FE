@@ -113,8 +113,25 @@ const EditProfile = ({user}) => {
       )
      
     }
-EditProfile.propTypes = {
-        user: PropTypes.string.isRequired
-}
+
+    EditProfile.propTypes = {
+        user: PropTypes.shape({
+            firstName: PropTypes.string.isRequired,
+            lastName: PropTypes.string.isRequired,
+            photoUrl: PropTypes.string,
+            about: PropTypes.string,
+            age: PropTypes.oneOfType([              // Age can be a number or null/undefined
+                PropTypes.number,
+                PropTypes.oneOf([null]),
+              ]),
+              gender: PropTypes.oneOf([               // Gender can be one of the predefined values
+                "male",
+                "female",
+                "non-binary",
+                "other",
+                null,
+              ]), 
+        }).isRequired,
+    };
 
 export default EditProfile
