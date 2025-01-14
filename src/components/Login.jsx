@@ -1,9 +1,8 @@
-import axios from "axios"
 import { useState } from "react"
 import { useDispatch } from "react-redux"
 import { addUser } from "../utils/userSlice"
 import { useNavigate } from "react-router-dom"
-import { BASE_URL } from "../utils/constants"
+import axiosInstance from "../config/axiosInstance"
 
 const Login = () => {
 
@@ -18,11 +17,9 @@ const Login = () => {
 
     const handleLogin = async () => {
         try {
-            const res = await axios.post(`${BASE_URL}/login` , {
+            const res = await axiosInstance.post("/login" , {
                 emailId,
                 password,
-            },{
-                withCredentials: true
             })
             // console.log(res.data)
             dispatch(addUser(res.data));
@@ -38,7 +35,7 @@ const Login = () => {
 
 const handleSignUp = async() => {
     try {
-        const res = await axios.post(`${BASE_URL}/signup`, {firstName, lastName, emailId, password} ,{withCredentials: true})
+        const res = await axiosInstance.post("/signup", {firstName, lastName, emailId, password})
         dispatch(addUser(res.data.data));
         console.log(res.data.data)
         return navigate("/profile")

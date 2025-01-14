@@ -1,10 +1,9 @@
 import { useState } from "react"
 import PropTypes from "prop-types"
 import UserCard from "./UserCard"
-import axios from "axios"
-import { BASE_URL } from "../utils/constants"
 import { useDispatch } from "react-redux"
 import { addUser } from "../utils/userSlice"
+import axiosInstance from "../config/axiosInstance"
 
 
 const EditProfile = ({user}) => {
@@ -23,7 +22,15 @@ const EditProfile = ({user}) => {
         // Clear Errors
         setError("")
         try {
-            const res = await axios.patch(`${BASE_URL}/profile/edit`, {firstName, lastName, photoUrl, age, gender, about}, {withCredentials: true})
+          const res = await axiosInstance.patch("/profile/edit", {
+            firstName,
+            lastName,
+            photoUrl,
+            age,
+            gender,
+            about,
+          });
+          
             dispatch(addUser(res?.data?.data))
             setShowToast(true)
             setTimeout(() => {

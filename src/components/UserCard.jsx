@@ -1,8 +1,7 @@
 import PropTypes from "prop-types";
-import { BASE_URL } from "../utils/constants";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
+import axiosInstance from "../config/axiosInstance";
 
 const UserCard = ({user}) => {
     const {firstName, lastName, photoUrl, age, _id ,gender, about} = user;
@@ -11,7 +10,7 @@ const UserCard = ({user}) => {
 
     const handleSendRequest = async (status, _id) => {
         try {
-            const res = await axios.post(`${BASE_URL}/request/send/${status}/${_id}`, {}, {withCredentials: true})
+            const res = await axiosInstance.post(`/request/send/${status}/${_id}`, {})
             dispatch(removeUserFromFeed(_id));
             console.log(res);
         } catch (error) {

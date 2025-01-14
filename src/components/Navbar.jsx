@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { removeUser } from "../utils/userSlice";
+import { resetFeed } from "../utils/feedSlice";
 
 const Navbar = () => {
   const user  = useSelector((store) => store.user);
@@ -14,6 +15,7 @@ const Navbar = () => {
     try {
       await axios.post(`${BASE_URL}/logout` , {} , {withCredentials: true})
       dispatch(removeUser())
+      dispatch(resetFeed());
        return navigate("/login")
     } catch (error) {
       console.log(error)
@@ -24,9 +26,16 @@ const Navbar = () => {
   return (
    <>
    <div className="navbar bg-base-300">
-  <div className="flex-1">
-    <Link to="/" className="btn btn-ghost text-xl">DevTinder</Link>
-  </div>
+   <div className="flex-1">
+  <button
+    className="btn btn-ghost text-xl"
+    onClick={() => { user ? navigate("/") : navigate("/login");
+    }}
+  >
+    DevTinder
+  </button>
+</div>
+
   {user && (<div className="flex-none gap-2">
    <div className="dropdown dropdown-end mx-5 flex ">
      <p className="px-4">Welcome, {user.firstName}</p>
