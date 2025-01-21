@@ -8,6 +8,7 @@ import { addUser } from "../utils/userSlice";
 import { useEffect } from "react";
 import axiosInstance from "../config/axiosInstance";
 
+
 const Body = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
