@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { removeUserFromFeed } from "../utils/feedSlice";
 import axiosInstance from "../config/axiosInstance";
 
-const UserCard = ({user}) => {
+const UserCard = ({user , isProfile}) => {
     const {firstName, lastName, photoUrl, age, _id ,gender, about} = user;
     const dispatch = useDispatch();
     console.log(user);
@@ -30,10 +30,10 @@ const UserCard = ({user}) => {
     <h2 className="card-title">{firstName + " " + lastName}</h2>
    {age && gender && <p>{age + "," + gender}</p>}
     <p>{about}</p>
-    <div className="card-actions justify-end mt-10">
+    {!isProfile && (<div className="card-actions justify-end mt-10">
       <button className="btn btn-primary" onClick={() => handleSendRequest("interested", _id)}>Interested</button>
       <button className="btn bg-red-800" onClick={() => handleSendRequest("ignored",_id)}>Iqnored</button>
-    </div>
+    </div>)}
   </div>
 </div>
     </>

@@ -6,8 +6,8 @@ import { addUser } from "../utils/userSlice";
 import { useEffect } from "react";
 import axiosInstance from "../config/axiosInstance";
 
-
-const Body = () => {
+//hello world
+const Body = () => { 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -36,11 +36,13 @@ const Body = () => {
   }, [location.pathname]);
 
   return (
-    <div>
+    <div className="flex flex-col min-h-screen">
       <Navbar />
-      <Outlet />
-      <Footer />
-    </div>
+    <main className="flex-grow"> 
+      <Outlet /> \
+    </main>
+    <Footer />
+  </div>
   );
 };
 

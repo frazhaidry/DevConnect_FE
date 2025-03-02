@@ -30,7 +30,7 @@ if(feed.length <= 0) return <h1 className="flex justify-center m-10 text-bold te
 
   return (
     feed && (
-    <div className="flex justify-center mt-20">
+    <div className=" flex justify-center mt-20">
         <UserCard user={feed[0]}/>
     </div>
     )
