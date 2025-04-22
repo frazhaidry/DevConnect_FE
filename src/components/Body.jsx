@@ -1,10 +1,13 @@
-import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser } from "../utils/userSlice";
+import { addUser, removeUser } from "../utils/userSlice";
 import { useEffect } from "react";
 import axiosInstance from "../config/axiosInstance";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
+import { resetFeed } from "../utils/feedSlice";
 
 //hello world
 const Body = () => { 
@@ -12,6 +15,17 @@ const Body = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const userData = useSelector((store) => store.user);
+
+  const handleLogout = async () => {
+    try {
+      await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
+      dispatch(removeUser());
+      dispatch(resetFeed());
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const fetchUser = async () => {
     if (userData) return; 
@@ -36,13 +50,43 @@ const Body = () => {
   }, [location.pathname]);
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <Navbar />
-    <main className="flex-grow"> 
-      <Outlet /> \
-    </main>
-    <Footer />
+    <>
+  <Navbar />
+  <div className="grid grid-cols-5 gap-4  bg-[#121212] min-h-screen">
+    {/* 80% Feed */}
+    <div className="col-span-4">
+      <main className="flex-grow">
+        <Outlet /> {/* Feed content will be rendered here */}
+      </main>
+    </div>
+
+    {/* 20% Sidebar with Links */}
+    <div className="col-span-1 border-l border-white/20 bg-[#121212] p-4 flex flex-col h-screen">
+  {/* Links section */}
+  <div className="flex flex-col space-y-2">
+    <Link
+      to="/profile"
+      className="text-white font-bold py-3 px-4 rounded transition duration-300 transform hover:scale-105 hover:bg-blue-600"
+    >
+      Profile
+    </Link>
+    <Link
+      to="/connections"
+      className="text-white font-bold py-3 px-4 rounded transition duration-300 transform hover:scale-105 hover:bg-blue-600"
+    >
+      Connections
+    </Link>
+    <Link
+      to="/requests"
+      className="text-white font-bold py-3 px-4 rounded transition duration-300 transform hover:scale-105 hover:bg-blue-600"
+    >
+      Requests
+    </Link>
   </div>
+    </div>
+  </div>
+  <Footer />
+</>
   );
 };
 

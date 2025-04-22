@@ -32,7 +32,7 @@ const UserCard = ({user , isProfile}) => {
     <p>{about}</p>
     {!isProfile && (<div className="card-actions justify-end mt-10">
       <button className="btn btn-primary" onClick={() => handleSendRequest("interested", _id)}>Interested</button>
-      <button className="btn bg-red-800" onClick={() => handleSendRequest("ignored",_id)}>Iqnored</button>
+      <button className="btn bg-red-800" onClick={() => handleSendRequest("ignored",_id)}>Ignored</button>
     </div>)}
   </div>
 </div>
