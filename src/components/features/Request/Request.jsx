@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import axiosInstance from "../config/axiosInstance";
-import { addRequest, removeRequest } from "../utils/requestSlice";
+import axiosInstance from "../../../config/axiosInstance";
+import { addRequest, removeRequest } from "../../../utils/requestSlice";
 
 const Request = () => {
     const request = useSelector((store) => store.request);

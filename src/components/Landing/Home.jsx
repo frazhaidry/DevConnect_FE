@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import Navbar from "../Navbar";
+
 import Hero from "./Hero";
 import Features from "./Features";
 import AboutUs from "./AboutUs";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
 import Faq from "./Faq";
-import Footer from "../Footer";
+import Footer from "../Layout/Footer";
+import Navbar from "../Layout/Navbar";
+
 
 
 const Home = () => {

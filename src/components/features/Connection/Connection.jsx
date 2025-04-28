@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addConnections } from "../utils/connectionSlice";
-import axiosInstance from "../config/axiosInstance";
+import { addConnections } from "../../../utils/connectionSlice";
+import axiosInstance from "../../../config/axiosInstance";
 import { Search, Filter } from "lucide-react"; 
 import { Link } from "react-router-dom";
 

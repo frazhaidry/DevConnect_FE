@@ -1,9 +1,9 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/constants";
+import { BASE_URL } from "../../utils/constants";
 import axios from "axios";
-import { removeUser } from "../utils/userSlice";
-import { resetFeed } from "../utils/feedSlice";
+import { removeUser } from "../../utils/userSlice";
+import { resetFeed } from "../../utils/feedSlice";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useState } from "react";
 
@@ -56,16 +56,21 @@ const Navbar = () => {
           >
             About Us
           </button>
-          <button
+          {/* <button
             className=" font-semibold text-black hover:text-blue-500 link-underline transition duration-300"
             onClick={() =>
               window.location.pathname !== "/"
-                ? navigate("/", { state: { scrollTo: "contact" } })
-                : scrollToSection("contact")
+                ? navigate("/", { state: { scrollTo: "blog" } })
+                : scrollToSection("blog")
             }
           >
-            Contact Us
-          </button>
+            Blogs
+          </button> */}
+          <Link 
+           to="/blogs"
+             className=" font-semibold text-black hover:text-blue-500 link-underline transition duration-300">
+              Blogs
+          </Link>
          <Link 
            to="/feed" 
            className="text-white border border-transparent p-2 font-bold rounded-md bg-gradient-to-r from-blue-700 to-emerald-500 bg-[length:200%_200%] hover:bg-right text-sm shadow-lg transition-all duration-300 hover:scale-105"

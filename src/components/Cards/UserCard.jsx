@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { useDispatch } from "react-redux";
-import { removeUserFromFeed } from "../utils/feedSlice";
-import axiosInstance from "../config/axiosInstance";
+import { removeUserFromFeed } from "../../utils/feedSlice";
+import axiosInstance from "../../config/axiosInstance";
 
 const UserCard = ({user , isProfile}) => {
     const {firstName, lastName, photoUrl, age, _id ,gender, about} = user;

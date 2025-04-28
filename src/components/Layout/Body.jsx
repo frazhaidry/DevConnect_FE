@@ -2,12 +2,10 @@ import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, removeUser } from "../utils/userSlice";
+import { addUser } from "../../utils/userSlice";
 import { useEffect } from "react";
-import axiosInstance from "../config/axiosInstance";
-import axios from "axios";
-import { BASE_URL } from "../utils/constants";
-import { resetFeed } from "../utils/feedSlice";
+import axiosInstance from "../../config/axiosInstance";
+
 
 //hello world
 const Body = () => { 
@@ -16,16 +14,7 @@ const Body = () => {
   const location = useLocation();
   const userData = useSelector((store) => store.user);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
-      dispatch(removeUser());
-      dispatch(resetFeed());
-      navigate("/");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
 
   const fetchUser = async () => {
     if (userData) return; 
@@ -81,6 +70,12 @@ const Body = () => {
       className="text-white font-bold py-3 px-4 rounded transition duration-300 transform hover:scale-105 hover:bg-blue-600"
     >
       Requests
+    </Link>
+    <Link
+      to="/blogs"
+      className="text-white font-bold py-3 px-4 rounded transition duration-300 transform hover:scale-105 hover:bg-blue-600"
+    >
+      My Blogs
     </Link>
   </div>
     </div>

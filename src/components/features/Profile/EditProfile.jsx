@@ -1,9 +1,10 @@
 import { useState } from "react"
 import PropTypes from "prop-types"
-import UserCard from "./UserCard"
+
 import { useDispatch } from "react-redux"
-import { addUser } from "../utils/userSlice"
-import axiosInstance from "../config/axiosInstance"
+import { addUser } from "../../../utils/userSlice"
+import axiosInstance from "../../../config/axiosInstance"
+import UserCard from "../../Cards/UserCard"
 
 
 const EditProfile = ({user}) => {
