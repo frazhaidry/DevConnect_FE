@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../../../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import axiosInstance from "../../../config/axiosInstance";
-import AuthLayout from "./AuthLayout";
+
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
