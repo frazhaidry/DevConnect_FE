@@ -31,7 +31,8 @@ import BlogEdit from "./components/features/Blogs/BlogEdit"
 import ProtectedLayout from "./components/Layout/ProtectedLayout"
 // import PublicLayout from "./components/Layout/PublicLayout"
 import AppLayout from "./components/Layout/AppLayout"
-import Signup from "./components/features/Auth/SignUp"
+import SignUp from "./components/features/Auth/SignUp"
+
 
 
 
@@ -52,7 +53,7 @@ function App() {
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/signup" element={<SignUp />} />
 
             {/* Public Blog Routes */}
             <Route path="/blogs" element={<Blogs />}>
