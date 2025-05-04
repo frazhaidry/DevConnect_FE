@@ -16,6 +16,7 @@ const BlogDetails = () => {
         try {
             const { data } = await axiosInstance.get(`/blogs/${id}`);
             setBlog(data.data);
+            console.log(data)
             setLoading(false);
     } catch (error){
         console.log("Failed to fetch blog details", error.message)

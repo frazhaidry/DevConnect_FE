@@ -1,6 +1,6 @@
 import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+// import Navbar from "./Navbar";
+// import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../../utils/userSlice";
 import { useEffect } from "react";
@@ -40,7 +40,7 @@ const Body = () => {
 
   return (
     <>
-  <Navbar />
+  
   <div className="grid grid-cols-5 gap-4  bg-[#121212] min-h-screen">
     {/* 80% Feed */}
     <div className="col-span-4">
@@ -80,9 +80,9 @@ const Body = () => {
   </div>
     </div>
   </div>
-  <Footer />
+  
 </>
   );
 };
 
-export default Body;
+// export default Body;

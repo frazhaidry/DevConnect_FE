@@ -5,6 +5,7 @@ import axiosInstance from "../../../config/axiosInstance";
 
 const BlogCard = ({blog, onDelete}) => {
     const id = blog?._id
+    console.log(blog)
 
     const handleDelete = async () => {
         if (window.confirm("Are you sure you want to delete this blog?")) {
@@ -36,7 +37,7 @@ const BlogCard = ({blog, onDelete}) => {
           </p>
     
           <div className="flex justify-between items-center text-xs text-gray-500 dark:text-gray-400 mb-4">
-            <span>👤 {author?.firstName || "Unknown Author"}</span>
+            <span>👤 {blog.author?.firstName || "Unknown Author"}</span>
             <span>{new Date(createdAt).toLocaleDateString()}</span>
           </div>
     

@@ -7,9 +7,6 @@ import AboutUs from "./AboutUs";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
 import Faq from "./Faq";
-import Footer from "../Layout/Footer";
-import Navbar from "../Layout/Navbar";
-
 
 
 const Home = () => {
@@ -33,7 +30,7 @@ const Home = () => {
 
   return (
    <>
-    <Navbar/>
+    
      <div className="bg-gray-50 min-h-screen flex flex-col">
 
       <Hero/>
@@ -44,7 +41,7 @@ const Home = () => {
       <Faq/>
       
     </div>
-    <Footer/>
+    
    </>
   );
 };
