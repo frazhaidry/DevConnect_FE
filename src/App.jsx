@@ -2,7 +2,7 @@
 import { BrowserRouter, Routes, Route} from "react-router-dom"
 // import Body from "./components/Layout/Body"
 
-import Profile from "./components/features/Profile/Profile"
+// import Profile from "./components/features/Profile/Profile"
 import { Provider } from "react-redux"
 import appStore from "./utils/appStore"
 import Feed from "./components/features/Feed/Feed"
@@ -32,6 +32,7 @@ import ProtectedLayout from "./components/Layout/ProtectedLayout"
 // import PublicLayout from "./components/Layout/PublicLayout"
 import AppLayout from "./components/Layout/AppLayout"
 import SignUp from "./components/features/Auth/SignUp"
+import ProfilePage from "./components/features/Profile/ProfilePage"
 
 
 
@@ -64,8 +65,8 @@ function App() {
 
             {/* Protected Routes */}
             <Route element={<ProtectedLayout />}>
-            <Route path="feed" element={<Feed />} />
-              <Route path="profile" element={<Profile />} />
+            <Route path="/feed" element={<Feed />} />
+              <Route path="profile" element={<ProfilePage />} />
               <Route path="connections" element={<Connection />} />
               <Route path="requests" element={<Request />} />
               <Route path="chat/:targetUserId" element={<Chat />} />

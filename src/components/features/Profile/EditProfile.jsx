@@ -1,119 +1,230 @@
-import { useState } from "react"
-import PropTypes from "prop-types"
+import { useState, useEffect, useRef } from "react";
+import PropTypes from "prop-types";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../../utils/userSlice";
+import axiosInstance from "../../../config/axiosInstance";
 
-import { useDispatch } from "react-redux"
-import { addUser } from "../../../utils/userSlice"
-import axiosInstance from "../../../config/axiosInstance"
-import UserCard from "../../Cards/UserCard"
+const EditProfile = ({ user, onClose }) => {
+  const [firstName, setFirstName] = useState(user.firstName);
+  const [lastName, setLastName] = useState(user.lastName);
+  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+  const [age, setAge] = useState(user.age || "");
+  const [gender, setGender] = useState(user.gender || "");
+  const [skills, setSkills] = useState(user.skills || []);
+  const [skillInput, setSkillInput] = useState("");
+  const [about, setAbout] = useState(user.about || "");
+  const [error, setError] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
+  const skillInputRef = useRef(null);
 
-const EditProfile = ({user}) => {
-
-    const [firstName, setFirstName] = useState(user.firstName)
-    const [lastName, setLastName]= useState(user.lastName)
-    const [photoUrl, setPhotoUrl] = useState(user.photoUrl)
-    const [age, setAge] = useState(user.age || "")
-    const [gender, setGender] = useState(user.gender || "")
-    const [skills, setSkills] = useState(user.skills || [])
-    const [skillInput, setSkillInput] = useState("");
-    const [about, setAbout] = useState(user.about || "")
-    const [error, setError] = useState("")
-    const dispatch = useDispatch()
-    const [showToast, setShowToast] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-      // Handle Adding Skills
-      const handleSkillKeyPress = (e) => {
-        if (e.key === "Enter" && skillInput.trim() !== "") {
-            setSkills([...skills, skillInput.trim()]);
-            setSkillInput(""); // Clear input after adding skill
-            e.preventDefault();
-        }
-    };
-
-     // Handle Removing Skills
-     const handleRemoveSkill = (index) => {
-      setSkills(skills.filter((_, i) => i !== index));
+  const addSkill = (skill) => {
+    const trimmedSkill = skill.trim();
+    if (
+      trimmedSkill !== "" &&
+      !skills.some((s) => s.toLowerCase() === trimmedSkill.toLowerCase())
+    ) {
+      setSkills([...skills, trimmedSkill]);
+    }
   };
 
-    const saveProfile = async()=> {
-        // Clear Errors
-        setError("")
-        setLoading(true);
-        try {
-          const res = await axiosInstance.patch("/profile/edit", {
-            firstName,
-            lastName,
-            photoUrl,
-            age,
-            skills,
-            gender,
-            about,
-          });
-          
-            dispatch(addUser(res?.data?.data))
-            setShowToast(true)
-            setTimeout(() => {
-                setShowToast(false);
-            }, 3000);   
-
-        } catch (error) {
-          setError(error?.response?.data || "Failed to save profile");
-        } finally {
-          setLoading(false);
-        }
+  const handleSkillKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      if (skillInput.trim() !== "") {
+        addSkill(skillInput);
+        setSkillInput("");
+      }
     }
-    
-  return(
-    <>
-        <div className="flex flex-col items-center p-6 md:flex-row md:justify-center md:gap-6">
-      {/* Profile Edit Card */}
-      <div className="card bg-base-300 w-full max-w-lg shadow-xl p-6 rounded-lg">
-        <h2 className="text-2xl font-semibold text-center mb-4">Edit Profile</h2>
-        <div className="flex flex-col gap-4">
-          <input type="text" value={firstName} className="input input-bordered" placeholder="First Name" onChange={(e) => setFirstName(e.target.value)} />
-          <input type="text" value={lastName} className="input input-bordered" placeholder="Last Name" onChange={(e) => setLastName(e.target.value)} />
-          <input type="text" value={photoUrl} className="input input-bordered" placeholder="Photo URL" onChange={(e) => setPhotoUrl(e.target.value)} />
-          {/* {photoUrl && <img src={photoUrl} alt="Profile" className="w-24 h-24 rounded-full mx-auto" />} */}
-          <input type="number" value={age} className="input input-bordered" placeholder="Age" onChange={(e) => setAge(e.target.value)} />
-          <select className="select select-bordered" value={gender} onChange={(e) => setGender(e.target.value)}>
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="non-binary">Non-Binary</option>
-            <option value="other">Other</option>
-          </select>
-            {/* Skills Input */}
-            <div className="border p-3 rounded-lg w-full">
-                        <div className="flex flex-wrap gap-2">
-                            {skills.map((skill, index) => (
-                                <span key={index} className="bg-blue-500 text-white px-3 py-1 rounded-full text-sm flex items-center">
-                                    {skill}
-                                    <button onClick={() => handleRemoveSkill(index)} className="ml-2 text-white">×</button>
-                                </span>
-                            ))}
-                        </div>
-                        <input
-                            type="text"
-                            value={skillInput}
-                            className="mt-2 w-full border p-2 rounded-lg"
-                            placeholder="Type skill and press Enter"
-                            onChange={(e) => setSkillInput(e.target.value)}
-                            onKeyDown={handleSkillKeyPress}
-                        />
-                    </div>
-          <textarea value={about} className="textarea textarea-bordered" placeholder="About" onChange={(e) => setAbout(e.target.value)}></textarea>
-          <p className="text-red-500 text-sm">{error}</p>
-          <button className={`btn btn-primary w-full ${loading ? "btn-disabled" : ""}`} onClick={saveProfile}>
-            {loading ? "Saving..." : "Save Profile"}
-          </button>
-        </div>
+    if (e.key === "Backspace" && skillInput === "" && skills.length > 0) {
+      setSkills(skills.slice(0, skills.length - 1));
+    }
+  };
+
+  const handleRemoveSkill = (index) => {
+    setSkills(skills.filter((_, i) => i !== index));
+  };
+
+  const isFormValid = firstName.trim() !== "" && lastName.trim() !== "";
+
+  const saveProfile = async () => {
+    if (!isFormValid) {
+      setError("First and Last name are required");
+      return;
+    }
+    setError("");
+    setLoading(true);
+    try {
+      const res = await axiosInstance.patch("/profile/edit", {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        photoUrl: photoUrl.trim(),
+        age,
+        skills,
+        gender,
+        about,
+      });
+      dispatch(addUser(res?.data?.data));
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+      onClose();
+    } catch (error) {
+      setError(error?.response?.data || "Failed to save profile");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (skillInputRef.current) skillInputRef.current.focus();
+  }, [skills]);
+
+  return (
+    <div className="card w-full max-w-xl mx-auto p-6 rounded-2xl bg-black/50 backdrop-blur-md shadow-2xl border border-white/20 transition-all duration-300">
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-3xl font-bold text-white">Edit Profile</h2>
+        <button
+          className="btn btn-sm border border-white/30 text-white hover:bg-white/10"
+          onClick={onClose}
+          disabled={loading}
+        >
+          Cancel
+        </button>
       </div>
 
-      {/* User Card Preview */}
-      <UserCard user={{ firstName, lastName, photoUrl, age, gender, about }} isProfile={true}/>
+      <div className="flex flex-col gap-5">
+        {/* First Name */}
+        <input
+          type="text"
+          value={firstName}
+          className="input input-bordered bg-black/40 placeholder-white/70 text-white border-white/30 focus:border-blue-400"
+          placeholder="First Name *"
+          onChange={(e) => setFirstName(e.target.value)}
+          disabled={loading}
+        />
 
-      {/* Toast Notification */}
+        {/* Last Name */}
+        <input
+          type="text"
+          value={lastName}
+          className="input input-bordered bg-black/40 placeholder-white/70 text-white border-white/30 focus:border-blue-400"
+          placeholder="Last Name *"
+          onChange={(e) => setLastName(e.target.value)}
+          disabled={loading}
+        />
+
+        {/* Photo URL */}
+        <input
+          type="url"
+          value={photoUrl}
+          className="input input-bordered bg-black/40 placeholder-white/70 text-white border-white/30 focus:border-blue-400"
+          placeholder="Photo URL"
+          onChange={(e) => setPhotoUrl(e.target.value)}
+          disabled={loading}
+        />
+
+        {/* Age */}
+        <input
+          type="number"
+          value={age}
+          className="input input-bordered bg-black/40 placeholder-white/70 text-white border-white/30 focus:border-blue-400"
+          placeholder="Age"
+          min={0}
+          onChange={(e) => setAge(e.target.value)}
+          disabled={loading}
+        />
+
+        {/* Gender */}
+        <select
+          className="select select-bordered bg-black/40 text-white border-white/30 focus:border-blue-400"
+          value={gender}
+          onChange={(e) => setGender(e.target.value)}
+          disabled={loading}
+        >
+          <option className="text-black" value="">
+            Select Gender
+          </option>
+          <option className="text-black" value="male">
+            Male
+          </option>
+          <option className="text-black" value="female">
+            Female
+          </option>
+          <option className="text-black" value="non-binary">
+            Non-Binary
+          </option>
+          <option className="text-black" value="other">
+            Other
+          </option>
+        </select>
+
+        {/* Skills */}
+        <div className="border border-white/30 p-4 rounded-lg">
+          <label className="block mb-2 font-semibold text-white">Skills</label>
+          <div className="flex flex-wrap gap-2 mb-3">
+            {skills.map((skill, index) => (
+              <span
+                key={index}
+                className="bg-blue-500/80 text-white px-3 py-1 rounded-full text-sm flex items-center"
+              >
+                {skill}
+                <button
+                  onClick={() => handleRemoveSkill(index)}
+                  className="ml-2 text-white hover:text-red-400"
+                  disabled={loading}
+                >
+                  ×
+                </button>
+              </span>
+            ))}
+          </div>
+          <input
+            ref={skillInputRef}
+            type="text"
+            value={skillInput}
+            className="w-full bg-black/30 border border-white/30 text-white p-2 rounded-md placeholder-white/70 focus:border-blue-400"
+            placeholder="Type skill and press Enter"
+            onChange={(e) => setSkillInput(e.target.value)}
+            onKeyDown={handleSkillKeyPress}
+            disabled={loading}
+          />
+        </div>
+
+        {/* About */}
+        <textarea
+          value={about}
+          className="textarea textarea-bordered bg-black/40 text-white placeholder-white/70 border-white/30 focus:border-blue-400"
+          placeholder="About"
+          onChange={(e) => setAbout(e.target.value)}
+          disabled={loading}
+          rows={5}
+        />
+
+        {/* Error */}
+        {error && <p className="text-red-400 text-sm">{error}</p>}
+
+        {/* Save Button */}
+        <button
+          className={`btn btn-primary w-full ${
+            loading || !isFormValid ? "btn-disabled" : ""
+          }`}
+          onClick={saveProfile}
+          disabled={loading || !isFormValid}
+        >
+          {loading ? (
+            <>
+              <span className="loading loading-spinner loading-sm mr-2"></span>
+              Saving...
+            </>
+          ) : (
+            "Save Profile"
+          )}
+        </button>
+      </div>
+
+      {/* Toast */}
       {showToast && (
         <div className="toast toast-bottom toast-center">
           <div className="alert alert-success">
@@ -122,30 +233,12 @@ const EditProfile = ({user}) => {
         </div>
       )}
     </div>
-         </>
-      )
-     
-    }
+  );
+};
 
-    EditProfile.propTypes = {
-        user: PropTypes.shape({
-            firstName: PropTypes.string.isRequired,
-            lastName: PropTypes.string.isRequired,
-            photoUrl: PropTypes.string,
-            skills: PropTypes.string,
-            about: PropTypes.string,
-            age: PropTypes.oneOfType([              // Age can be a number or null/undefined
-                PropTypes.number,
-                PropTypes.oneOf([null]),
-              ]),
-              gender: PropTypes.oneOf([               // Gender can be one of the predefined values
-                "male",
-                "female",
-                "non-binary",
-                "other",
-                null,
-              ]), 
-        }).isRequired,
-    };
+EditProfile.propTypes = {
+  user: PropTypes.object.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
 
-export default EditProfile
+export default EditProfile;
