@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { Link,  useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { BASE_URL } from "../../utils/constants";
 import axios from "axios";
 import { removeUser } from "../../utils/userSlice";
@@ -11,6 +11,8 @@ const Navbar = () => {
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -18,175 +20,126 @@ const Navbar = () => {
       await axios.post(`${BASE_URL}/logout`, {}, { withCredentials: true });
       dispatch(removeUser());
       dispatch(resetFeed());
-      navigate("/", {replace: true});
+      navigate("/", { replace: true });
     } catch (error) {
       console.log(error);
     }
   };
 
-  const scrollToSection = (sectionId) => {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
+  const isOnFeed = location.pathname === "/feed";
 
   return (
     <>
       {/* Navbar */}
-      <div className="navbar bg-[#fefdff] px-10 py-5 text-black border-b border-b-white border-b-4 border-[#272727]">
-        <div className="flex-1">
-          <button className=" text-blue-600 font-semibold btn btn-ghost text-2xl text-[#E0E0E0]" onClick={() => navigate("/")}>
-            DevConnekt
-          </button>
-        </div>
+      <nav className="fixed top-0 left-0 w-full z-50 bg-dark-card bg-opacity-90 backdrop-blur-md px-4 sm:px-8 py-4 sm:py-6 flex items-center justify-between border-b border-dark-border shadow-md">
+        {/* Logo */}
+        <button
+          onClick={() => navigate("/")}
+          className="text-dark-accent font-extrabold text-2xl sm:text-3xl tracking-wide hover:text-dark-text transition-colors duration-300"
+        >
+          DevConnekt
+        </button>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex flex-none gap-8">
-          <Link to="/" className="text-black font-semibold  hover:text-blue-500 link-underline transition duration-300">
-            Home
-          </Link>
-          <button
-            className="text-black font-semibold hover:text-blue-500 link-underline transition duration-300"
-            onClick={() =>
-              window.location.pathname !== "/"
-                ? navigate("/", { state: { scrollTo: "about" } })
-                : scrollToSection("about")
-            }
-          >
-            About Us
-          </button>
-          {/* <button
-            className=" font-semibold text-black hover:text-blue-500 link-underline transition duration-300"
-            onClick={() =>
-              window.location.pathname !== "/"
-                ? navigate("/", { state: { scrollTo: "blog" } })
-                : scrollToSection("blog")
-            }
-          >
-            Blogs
-          </button> */}
-          <Link 
-           to="/blogs"
-             className=" font-semibold text-black hover:text-blue-500 link-underline transition duration-300">
-              Blogs
-          </Link>
-         <Link 
-           to="/feed" 
-           className="text-white border border-transparent p-2 font-bold rounded-md bg-gradient-to-r from-blue-700 to-emerald-500 bg-[length:200%_200%] hover:bg-right text-sm shadow-lg transition-all duration-300 hover:scale-105"
-            >
-          🚀 Feed
-             </Link>
+        {/* Links */}
+        <div className="hidden md:flex items-center gap-8 font-semibold text-dark-text ml-auto">
+          <Link to="/" className="hover:text-dark-accent transition">Home</Link>
+          <Link to="/resources" className="hover:text-dark-accent transition">Resources</Link>
+          <Link to="/blogs" className="hover:text-dark-accent transition">Blogs</Link>
 
+          {/* Practice Hub Dropdown */}
+          <div className="relative group">
+            <button className="hover:text-dark-accent transition">Practice Hub ▾</button>
+            <div className="absolute hidden group-hover:block mt-2 bg-dark-card border border-dark-border rounded-lg shadow-lg z-50 w-48 text-left">
+              <Link to="/dsa-sheet" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">DSA Sheet</Link>
+              <Link to="/quiz" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">Quiz</Link>
+              <Link to="/mock-interviews" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">Mock Interviews</Link>
+            </div>
+          </div>
 
           {user && (
-            <div className="dropdown dropdown-end mx-5 flex">
-              <p className="text-black font-semibold m-auto px-5">
-                  Welcome, <span className="text-cyan-600">{user.firstName}</span>
+            <Link
+              to="/feed"
+              className={`hover:text-dark-accent transition ${isOnFeed ? "text-dark-accent font-bold underline" : ""}`}
+            >
+              Feed
+            </Link>
+          )}
+
+          {!user ? (
+            <Link to="/login" className="text-dark-accent font-bold hover:text-dark-text transition">
+              Login
+            </Link>
+          ) : (
+            <div
+              className="relative flex items-center gap-3 cursor-pointer select-none"
+              onMouseEnter={() => setDropdownOpen(true)}
+              onMouseLeave={() => setDropdownOpen(false)}
+            >
+              <p className="text-dark-text font-semibold flex items-center gap-1">
+                Welcome, <span className="text-dark-accent">{user.firstName}</span>
+                <svg className={`w-4 h-4 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path d="M19 9l-7 7-7-7" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
               </p>
-              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
-                <div className="w-10 rounded-full">
-                  <img alt="User" src={user.photoUrl} />
-                </div>
+              <div className="btn btn-ghost btn-circle avatar p-0 border-2 border-dark-accent rounded-full overflow-hidden w-10 h-10">
+                <img alt="User avatar" src={user.photoUrl} />
               </div>
-              <ul tabIndex={0} className="menu menu-sm dropdown-content bg-[#1E1E1E] rounded-box z-[1] mt-3 w-52 p-2 shadow border border-[#272727] text-[#E0E0E0]">
-                <li>
-                  <Link to="/profile" className="justify-between text-white font-semibold">
-                    Profile
-                    <span className="badge bg-[#4F46E5] text-white">New</span>
-                  </Link>
-                </li >
-                <li className="text-white font-semibold"><Link to="/connections">Connections</Link></li>
-                <li className="text-white font-semibold"><Link to="/requests">Requests</Link></li>
-                <li>
-                  <a onClick={handleLogout} className=" font-semibold text-red-500 cursor-pointer">Logout</a>
-                </li>
-              </ul>
+
+              {dropdownOpen && (
+                <ul className="absolute right-0 top-full mt-2 bg-dark-card border border-dark-border rounded-md shadow-lg w-48 z-50 text-dark-text font-semibold">
+                  <li><Link to="/profile" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">Profile</Link></li>
+                  <li><Link to="/connections" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">Chat & Connections</Link></li>
+                  <li><Link to="/requests" className="block px-4 py-2 hover:bg-dark-accent hover:text-dark-card">Requests</Link></li>
+                  <li><button onClick={handleLogout} className="w-full text-left px-4 py-2 text-red-400 hover:bg-red-100 hover:text-red-600">Logout</button></li>
+                </ul>
+              )}
             </div>
           )}
         </div>
 
-        {/* Mobile Sidebar Toggle */}
-        <button className="md:hidden text-2xl text-[#E0E0E0]" onClick={() => setSidebarOpen(true)}>
+        {/* Mobile menu button */}
+        <button
+          className="md:hidden text-dark-accent text-3xl"
+          onClick={() => setSidebarOpen(true)}
+        >
           <FiMenu />
         </button>
-      </div>
+      </nav>
 
-      {/* Sidebar for Mobile */}
+      {/* Mobile Sidebar */}
       <div
-        className={`fixed top-0 left-0 h-full w-64 bg-[#1E1E1E] text-[#E0E0E0] shadow-lg z-[9999] transform ${
+        className={`fixed top-0 left-0 h-full bg-light-card text-light-text z-50 transition-transform duration-300 md:hidden shadow-lg ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } transition-transform duration-300 md:hidden`}
-        style={{ position: "fixed", height: "100vh", width: "75%", maxWidth: "320px" }}
+        }`}
+        style={{ width: "75%", maxWidth: "320px" }}
       >
-        <div className="flex justify-end p-4">
-          <button className="text-2xl text-[#E0E0E0]" onClick={() => setSidebarOpen(false)}>
+        <div className="flex justify-end p-4 border-b border-light-border">
+          <button className="text-light-accent text-3xl" onClick={() => setSidebarOpen(false)}>
             <FiX />
           </button>
         </div>
 
-        <ul className="flex flex-col space-y-4 p-6">
-          <li>
-            <Link to="/" className="block text-lg text-[#E0E0E0]" onClick={() => setSidebarOpen(false)}>
-              Home
-            </Link>
-          </li>
-          <li>
-            <button
-              className="block text-lg"
-              onClick={() => {
-                scrollToSection("about");
-                setSidebarOpen(false);
-              }}
-            >
-              About Us
-            </button>
-          </li>
-          <li>
-            <button
-              className="block text-lg"
-              onClick={() => {
-                scrollToSection("contact");
-                setSidebarOpen(false);
-              }}
-            >
-              Contact Us
-            </button>
-          </li>
-          <li>
-            <button
-              className="block text-lg"
-              onClick={() => {
-                user ? navigate("/feed") : navigate("/login");
-                setSidebarOpen(false);
-              }}
-            >
-              Feed
-            </button>
-          </li>
+        <ul className="flex flex-col space-y-6 p-6 font-semibold">
+          <li><Link to="/" onClick={() => setSidebarOpen(false)}>Home</Link></li>
+          <li><Link to="/resources" onClick={() => setSidebarOpen(false)}>Resources</Link></li>
+          <li><Link to="/blogs" onClick={() => setSidebarOpen(false)}>Blogs</Link></li>
+          <li className="font-bold">Practice Hub</li>
+          <li><Link to="/dsa-sheet" onClick={() => setSidebarOpen(false)}>DSA Sheet</Link></li>
+          <li><Link to="/quiz" onClick={() => setSidebarOpen(false)}>Quiz</Link></li>
+          <li><Link to="/mock-interviews" onClick={() => setSidebarOpen(false)}>Mock Interviews</Link></li>
+
           {user && (
             <>
-              <li>
-                <Link to="/profile" className="block text-lg" onClick={() => setSidebarOpen(false)}>
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link to="/connections" className="block text-lg" onClick={() => setSidebarOpen(false)}>
-                  Connections
-                </Link>
-              </li>
-              <li>
-                <Link to="/requests" className="block text-lg" onClick={() => setSidebarOpen(false)}>
-                  Requests
-                </Link>
-              </li>
-              <li>
-                <button className="block text-lg text-red-500" onClick={handleLogout}>
-                  Logout
-                </button>
-              </li>
+              <li><Link to="/feed" onClick={() => setSidebarOpen(false)}>Feed</Link></li>
+              <li><Link to="/profile" onClick={() => setSidebarOpen(false)}>Profile</Link></li>
+              <li><Link to="/connections" onClick={() => setSidebarOpen(false)}>Connections</Link></li>
+              <li><Link to="/requests" onClick={() => setSidebarOpen(false)}>Requests</Link></li>
+              <li><button onClick={() => { handleLogout(); setSidebarOpen(false); }} className="text-red-600">Logout</button></li>
             </>
+          )}
+
+          {!user && (
+            <li><Link to="/login" onClick={() => setSidebarOpen(false)}>Login</Link></li>
           )}
         </ul>
       </div>

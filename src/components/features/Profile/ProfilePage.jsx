@@ -1,3 +1,5 @@
+// ProfilePage.jsx
+
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import ProfileCard from "./ProfileCard";
@@ -8,7 +10,7 @@ const ProfilePage = () => {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
-    <div className="flex justify-center items-start px-4 py-10">
+    <div className="min-h-screen bg-[#F8F3D9] flex flex-col items-center">
       <div className="w-full">
         {isEditing ? (
           <EditProfile user={user} onClose={() => setIsEditing(false)} />

@@ -23,3 +23,18 @@
   .link-underline:hover::before {
     width: 100%;
   }
+
+  /* Smooth font rendering and full-height body */
+html, body {
+  @apply bg-light-background text-light-text font-sans transition-colors duration-300;
+}
+html.dark body {
+  @apply bg-dark-background text-dark-text;
+}
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+}

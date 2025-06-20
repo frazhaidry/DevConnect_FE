@@ -1,127 +1,146 @@
-import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
-import axiosInstance from "../../../config/axiosInstance"
-
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axiosInstance from "../../../config/axiosInstance";
 
 const BlogEdit = () => {
-  
-    // This component is used to edit a blog post
-    const {id} = useParams()
-    const navigate = useNavigate()
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-    const [formData, setFormData] = useState({
-        title: "",
-        content: "",
-        tags: [],
-    })
+  const [formData, setFormData] = useState({
+    title: "",
+    content: "",
+    tags: "",
+  });
 
-    const [error, setError] = useState("")
-    const [loading, setLoading] = useState(true)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-    const fetchBlogDetails = async () => {
+  const fetchBlogDetails = async () => {
+    try {
+      const res = await axiosInstance.get(`/blogs/${id}`);
+      const blog = res.data?.data;
 
-        try{
-        const res = await axiosInstance.get(`/blogs/${id}`);
-        const blog = res.data.data;
+      if (!blog) {
+        setError("Blog not found");
+        return;
+      }
 
-        setFormData({
-            title: blog.title,
-            content: blog.content,
-            tags: blog.tags.join(", "), // Convert tags array to a comma-separated string
-        })
-        setLoading(false)
+      setFormData({
+        title: blog.title,
+        content: blog.content,
+        tags: blog.tags.join(", "),
+      });
 
-       }catch(error) {
-        console.log("Failed to fetch blog details", error.message)
-        setLoading(false)
+      setLoading(false);
+    } catch (err) {
+      console.error("Failed to fetch blog details", err.message);
+      setError("Failed to load blog");
+      setLoading(false);
     }
-}
-
-    useEffect(() => {
-        fetchBlogDetails();
-    },[id])
-
-      // ✅ Correct input change handler
-     const handleInputChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
   };
 
-  const handleChange = async (e) => {
-    e.preventDefault(); // ✅ fixed typo
+  useEffect(() => {
+    fetchBlogDetails();
+  }, [id]);
+
+  const handleInputChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
     try {
-        const updateBlog = {
-            title: formData.title,
-            content: formData.content,
-            tags: formData.tags.split(",").map((tag) => tag.trim()),
-        };
+      const updatedBlog = {
+        ...formData,
+        tags: formData.tags.split(",").map((tag) => tag.trim()),
+      };
 
-        await axiosInstance.put(`/blogs/${id}`, updateBlog); // ✅ send the data
-        navigate(`/blogs/${id}`); // ✅ navigate after success
+      await axiosInstance.put(`/blogs/${id}`, updatedBlog);
+      navigate(`/blogs/${id}`);
     } catch (err) {
-        console.log(err);
-        setError("Failed to update blog");
+      console.error(err);
+      setError("Failed to update blog");
     }
-};
+  };
 
-    if(loading) return <h1 className="text-center font-bold text-white">Loading blog.....</h1>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-[#F8F3D9] flex items-center justify-center text-[#504B38] text-xl font-semibold">
+        Loading blog...
+      </div>
+    );
+  }
 
   return (
-    <>
-    <div className="max-w-2xl mx-auto p-8 rounded-2xl shadow-xl bg-[#1e1e1e]/90 backdrop-blur-md border border-gray-800">
-      <h2 className="text-3xl font-bold mb-6 text-white">✏️ Edit Blog</h2>
-  
-      {error && <p className="text-red-400 mb-4">{error}</p>}
-  
-      <form onSubmit={handleChange} className="space-y-5">
-        <div>
-          <label className="block mb-1 font-medium text-gray-300">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={formData.title}
-            onChange={handleInputChange}
-            className="w-full rounded-lg px-4 py-2 bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-  
-        <div>
-          <label className="block mb-1 font-medium text-gray-300">Content</label>
-          <textarea
-            name="content"
-            value={formData.content}
-            onChange={handleInputChange}
-            rows="8"
-            className="w-full rounded-lg px-4 py-2 bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          />
-        </div>
-  
-        <div>
-          <label className="block mb-1 font-medium text-gray-300">Tags (comma separated)</label>
-          <input
-            type="text"
-            name="tags"
-            value={formData.tags}
-            onChange={handleInputChange}
-            className="w-full rounded-lg px-4 py-2 bg-gray-900 text-white border border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-  
-        <button
-          type="submit"
-          className="w-full mt-4 bg-blue-600 text-white font-semibold py-2.5 rounded-lg hover:bg-blue-700 transition-all shadow hover:shadow-lg"
-        >
-          💾 Update Blog
-        </button>
-      </form>
+    <div className="min-h-screen bg-[#F8F3D9] py-10 px-4">
+      <div className="max-w-2xl mx-auto p-6 sm:p-8 rounded-2xl shadow-xl bg-[#EBE5C2] border border-[#E5DFB9]">
+        <h2 className="text-3xl font-bold mb-6 text-center text-[#504B38]">
+          ✏️ Edit Blog
+        </h2>
+
+        {error && (
+          <p className="text-red-600 mb-4 text-center font-medium">{error}</p>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5 text-[#504B38]">
+          <div>
+            <label htmlFor="title" className="block mb-1 font-semibold">
+              Title
+            </label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={formData.title}
+              onChange={handleInputChange}
+              className="w-full rounded-lg px-4 py-2 bg-white border border-[#E5DFB9] focus:outline-none focus:ring-2 focus:ring-[#B9B28A]"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="content" className="block mb-1 font-semibold">
+              Content
+            </label>
+            <textarea
+              id="content"
+              name="content"
+              value={formData.content}
+              onChange={handleInputChange}
+              rows="8"
+              className="w-full rounded-lg px-4 py-2 bg-white border border-[#E5DFB9] focus:outline-none focus:ring-2 focus:ring-[#B9B28A]"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="tags" className="block mb-1 font-semibold">
+              Tags (comma separated)
+            </label>
+            <input
+              id="tags"
+              name="tags"
+              type="text"
+              value={formData.tags}
+              onChange={handleInputChange}
+              className="w-full rounded-lg px-4 py-2 bg-white border border-[#E5DFB9] focus:outline-none focus:ring-2 focus:ring-[#B9B28A]"
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full mt-4 bg-[#B9B28A] text-[#504B38] font-semibold py-2.5 rounded-lg hover:bg-[#a49b74] transition-all shadow hover:shadow-lg"
+          >
+            💾 Update Blog
+          </button>
+        </form>
+      </div>
     </div>
-  </>
-  )
+  );
 };
 
-
-export default BlogEdit
+export default BlogEdit;

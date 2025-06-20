@@ -1,14 +1,17 @@
-import { Outlet } from "react-router-dom"
-
+import { Outlet } from "react-router-dom";
 
 const PublicLayout = () => {
   return (
-        <>
-          
-          <Outlet />
-          
-        </>
-  )
-}
+    <div className="min-h-screen flex flex-col bg-light-background text-light-text">
+     
+      
+      <main className="flex-1 w-full">
+        <Outlet />
+      </main>
 
-export default PublicLayout
+     
+    </div>
+  );
+};
+
+export default PublicLayout;

@@ -7,6 +7,9 @@ import AboutUs from "./AboutUs";
 import Testimonial from "./Testimonial";
 import Blog from "./Blog";
 import Faq from "./Faq";
+import UpCmnFeatures from "./UpCmnFeatures";
+import WhyDevconnekt from "./WhyDeconnekt";
+import HowItWorks from "./HowItWorks";
 
 
 const Home = () => {
@@ -34,8 +37,12 @@ const Home = () => {
      <div className="bg-gray-50 min-h-screen flex flex-col">
 
       <Hero/>
+       <AboutUs/>
       <Features/>
-      <AboutUs/>
+      <WhyDevconnekt/>
+      <UpCmnFeatures/>
+      <HowItWorks/>
+      
       <Testimonial/>
       <Blog/>
       <Faq/>

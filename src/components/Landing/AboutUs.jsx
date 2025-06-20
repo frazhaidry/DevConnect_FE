@@ -1,82 +1,93 @@
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { FaGlobe, FaUserFriends, FaRocket } from "react-icons/fa";
 
 const AboutUs = () => {
-    const navigate = useNavigate();
-    const user = useSelector((store)=> store.user)
+  const navigate = useNavigate();
+  const user = useSelector((store) => store.user);
 
-    const handleGetStarted = () => {
-        if (user) {
-          navigate("/feed", { replace: false });  // Redirect to feed if already logged in
-        } else {
-          navigate("/login",  { replace: false }); // Redirect to login if not logged in
-        }
-      };
+  const handleGetStarted = () => {
+    navigate(user ? "/feed" : "/login", { replace: false });
+  };
+
   return (
-   <>
-    {/* About Us Section */}
-    <section id="about" className="py-20 bg-gray-100 px-6">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
-        {/* Left Side - Text */}
+    <section
+      id="about"
+      className="w-full min-h-screen bg-[#F8F3D9] px-6 py-20 sm:py-24 lg:py-32 transition-all text-[#504B38] flex items-center"
+    >
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+        {/* Text Section */}
         <motion.div
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -40 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="md:w-1/2 text-center md:text-left"
+          className="w-full md:w-1/2"
         >
-          <h2 className="text-4xl font-bold text-gray-900">What is <span className="text-blue-600">DevConnekt?</span></h2>
-          <p className="mt-4 text-lg text-gray-700">
-  DevConnekt isn’t just another developer platform—it’s a <span className="font-bold">thriving hub</span> where coders,  
-   innovators, and problem-solvers come together.  
-</p>
+          <p className="uppercase text-sm tracking-widest text-[#B9B28A] font-semibold mb-3">
+            About DevConnekt
+          </p>
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold mb-5 leading-tight">
+            More than a platform —{" "}
+            <span className="text-[#B9B28A]">a movement for developers</span>
+          </h2>
+          <p className="text-base sm:text-lg text-[#6B6650] mb-6 leading-relaxed">
+            DevConnekt unites ambitious individuals preparing for placements,
+            internships, or simply improving their coding game. It's your space
+            to learn, connect, and grow — with purpose-built tools and a
+            like-minded community.
+          </p>
 
-          <ul className="mt-6 space-y-4">
-  <li className="flex items-center gap-3">
-    <span className="text-blue-600 text-2xl">🚀</span>  
-    <p className="text-gray-700">
-      <strong>Our Mission:</strong> To create a <span className="font-bold">global</span> developer ecosystem.
-    </p>
-  </li>
-  <li className="flex items-center gap-3">
-    <span className="text-blue-600 text-2xl">💡</span>  
-    <p className="text-gray-700">
-      <strong>Why It Matters:</strong> Finding <span className="font-bold">the right people & opportunities</span> is hard. We make it easy.
-    </p>
-  </li>
-  <li className="flex items-center gap-3">
-    <span className="text-blue-600 text-2xl">👥</span>  
-    <p className="text-gray-700">
-      <strong>Join Us:</strong> Be part of a <span className="font-bold">growing network</span> of devs ready to build together.
-    </p>
-  </li>
-</ul>
+          <div className="space-y-5">
+            <div className="flex items-start gap-3">
+              <FaRocket className="text-[#B9B28A] text-xl mt-1" />
+              <p>
+                <strong>Mission:</strong> Equip students with smart tools for
+                structured placement preparation.
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <FaGlobe className="text-[#B9B28A] text-xl mt-1" />
+              <p>
+                <strong>Vision:</strong> A global dev ecosystem built on
+                collaboration, credibility, and community.
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <FaUserFriends className="text-[#B9B28A] text-xl mt-1" />
+              <p>
+                <strong>Why Join:</strong> Be part of a focused network that
+                supports you through every step of your tech journey.
+              </p>
+            </div>
+          </div>
 
-          <button  onClick={()=> handleGetStarted()} className="mt-6 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
-            Get Started
+          <button
+            onClick={handleGetStarted}
+            className="mt-8 bg-[#504B38] text-white px-6 py-3 rounded-lg hover:bg-[#3e3a2a] transition shadow-md"
+          >
+            {user ? "Go to Feed →" : "Get Started →"}
           </button>
         </motion.div>
 
-        {/* Right Side - Image */}
+        {/* Image Section */}
         <motion.div
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 40 }}
           whileInView={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.7 }}
           viewport={{ once: true }}
-          className="md:w-1/2 flex justify-center mt-8 md:mt-0"
+          className="w-full md:w-1/2"
         >
-          <img 
-  src="https://images.unsplash.com/photo-1733503711063-3427bff34612?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
-  alt="Developers working" 
-  className="rounded-xl shadow-lg w-full max-w-md"
-/>
-
+          <img
+            src="https://images.unsplash.com/photo-1733503711063-3427bff34612?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+            alt="Developers at work"
+            className="rounded-2xl shadow-lg w-full object-cover max-h-[500px] border border-[#E5DFB9]"
+          />
         </motion.div>
       </div>
     </section>
-   </>
-  )
-}
+  );
+};
 
-export default AboutUs
+export default AboutUs;

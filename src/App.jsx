@@ -33,6 +33,17 @@ import ProtectedLayout from "./components/Layout/ProtectedLayout"
 import AppLayout from "./components/Layout/AppLayout"
 import SignUp from "./components/features/Auth/SignUp"
 import ProfilePage from "./components/features/Profile/ProfilePage"
+import LockedPage from "./components/Landing/LockedPage"
+import Quiz from "./components/features/Quiz/Quiz"
+import Dsa_Sheet_Home from "./components/features/DSA_Sheet/Dsa_Sheet_Home"
+import Resources from "./components/features/Resource/Resources"
+import InterviewQuestions from "./components/features/Resource/InterviewQuestions"
+import CoverLetterGuide from "./components/features/Resource/CoverLetterGuide"
+import Cn_question from "./components/features/Resource/Cn_question"
+import Os_question from "./components/features/Resource/Os_question"
+import Dbms_question from "./components/features/Resource/Dbms_question"
+import Oops from "./components/features/Resource/Oops"
+import MockInterview from "./components/features/MockInterview/MockInterview"
 
 
 
@@ -55,6 +66,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+             <Route path="/locked" element={<LockedPage />} /> 
 
             {/* Public Blog Routes */}
             <Route path="/blogs" element={<Blogs />}>
@@ -63,12 +75,23 @@ function App() {
               
             </Route>
 
+            <Route path="/resources" element={<Resources />}></Route>
+            <Route path="/resources/interview-questions" element={<InterviewQuestions />} />
+            <Route path="/resources/cover-letter" element={<CoverLetterGuide />} />
+            <Route path="/resources/cs/cn" element={<Cn_question />} />
+            <Route path="/resources/cs/os" element={<Os_question/>}/>
+            <Route path="/resources/cs/dbms" element={<Dbms_question/>}/>
+            <Route path="/resources/cs/oops" element={<Oops/>}/>
+            <Route path="/quiz" element={<Quiz />} />
+            <Route path="/dsa-sheet" element={<Dsa_Sheet_Home />} />
+
             {/* Protected Routes */}
             <Route element={<ProtectedLayout />}>
             <Route path="/feed" element={<Feed />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="connections" element={<Connection />} />
               <Route path="requests" element={<Request />} />
+              <Route path="/mock-interviews" element={<MockInterview/>}/>
               <Route path="chat/:targetUserId" element={<Chat />} />
               <Route path="blogs/create" element={<BlogCreate />} />
               <Route path="blogs/:id/edit" element={<BlogEdit />} />
