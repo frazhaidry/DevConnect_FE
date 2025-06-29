@@ -1,6 +1,18 @@
 import { motion } from "framer-motion";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CountUp from "react-countup";
+
+
+const StatCard = ({ end, label }) => (
+  <div className="flex flex-col items-center">
+    <span className="text-4xl font-extrabold">
+      <CountUp end={end} duration={2} separator="," />
+      +
+    </span>
+    <span className="text-lg font-medium">{label}</span>
+  </div>
+);
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -34,29 +46,17 @@ const Hero = () => {
 
 
       {/* Impact Stats */}
-      <motion.div
-        className="mt-10 flex flex-wrap justify-center gap-10 text-[#504B38]"
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-      >
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-extrabold">100+</span>
-          <span className="text-lg font-medium">Registered Users</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-extrabold">150+</span>
-          <span className="text-lg font-medium">DSA Questions</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-extrabold">50+</span>
-          <span className="text-lg font-medium">Interviews Questions</span>
-        </div>
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-extrabold">20+</span>
-          <span className="text-lg font-medium">Blog Posts</span>
-        </div>
-      </motion.div>
+       <motion.div
+      className="mt-10 flex flex-wrap justify-center gap-10 text-[#504B38]"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 10 }}
+      transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+    >
+      <StatCard end={100} label="Registered Users" />
+      <StatCard end={150} label="DSA Questions" />
+      <StatCard end={50} label="Interview Questions" />
+      <StatCard end={20} label="Blog Posts" />
+    </motion.div>
 
       {/* CTA Button */}
       <motion.div
