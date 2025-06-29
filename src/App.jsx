@@ -44,6 +44,8 @@ import Os_question from "./components/features/Resource/Os_question"
 import Dbms_question from "./components/features/Resource/Dbms_question"
 import Oops from "./components/features/Resource/Oops"
 import MockInterview from "./components/features/MockInterview/MockInterview"
+import Compiler_Ques from "./components/features/Resource/Compiler_Ques"
+import VerifyOtp from "./components/features/Auth/VerifyOtp"
 
 
 
@@ -66,6 +68,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/verify-otp" element={<VerifyOtp/>} />
              <Route path="/locked" element={<LockedPage />} /> 
 
             {/* Public Blog Routes */}
@@ -82,6 +85,7 @@ function App() {
             <Route path="/resources/cs/os" element={<Os_question/>}/>
             <Route path="/resources/cs/dbms" element={<Dbms_question/>}/>
             <Route path="/resources/cs/oops" element={<Oops/>}/>
+            <Route path="/resources/cs/compiler" element={<Compiler_Ques/>} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/dsa-sheet" element={<Dsa_Sheet_Home />} />
 
